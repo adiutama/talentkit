@@ -13,10 +13,6 @@ export default function Home() {
     setError("");
     setIsSubmitting(true);
 
-    // Simulate async API call for subscription (mock)
-    await new Promise((resolve) => setTimeout(resolve, 1200));
-
-    // Simulate subscription success unless the input is empty or invalid
     const emailValid = /\S+@\S+\.\S+/.test(email);
 
     if (email.trim() === "") {
@@ -30,8 +26,28 @@ export default function Home() {
       return;
     }
 
-    setSubmitted(true);
-    setIsSubmitting(false);
+    try {
+      const response = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        setError(data.error || "Subscription failed. Please try again later.");
+        setIsSubmitting(false);
+        return;
+      }
+
+      setSubmitted(true);
+    } catch {
+      setError("An error occurred. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -123,7 +139,7 @@ export default function Home() {
             ) : (
               <div className="max-w-md mx-auto p-6 rounded-lg bg-teal-400/10 border border-teal-400/20">
                 <p className="text-teal-400 font-medium">
-                  ✓ Thanks! We&apos;ll notify you when we launch.
+                  ✓ Thanks! We&apos;ll send you and update when we launch.
                 </p>
               </div>
             )}
