@@ -92,7 +92,7 @@ export default function Home() {
           </p>
           
           <p className="text-lg text-navy-300 mb-12 max-w-lg mx-auto">
-            Access intelligent tools that organize your search and ensure every application is professionally targeted.
+            Access intelligent tools that will assist you in a journey to get your dream job.
           </p>
 
           {/* Visual progress indicator */}
